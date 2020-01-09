@@ -2,8 +2,9 @@ package rsql
 
 // Params :
 type Params struct {
-	Selects []interface{}
+	Selects []string
 	Filters []*Filter
 	Sorts   []*Sort
 	Limit   uint
+	Cursor  string
 }
