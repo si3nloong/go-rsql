@@ -4,6 +4,6 @@ package rsql
 type Params struct {
 	Selects []interface{}
 	Filters []*Filter
-	Sorts   []interface{}
+	Sorts   []*Sort
 	Limit   uint
 }

@@ -1,7 +1,6 @@
 package rsql
 
 import (
-	"log"
 	"reflect"
 
 	"github.com/timtadh/lexmachine"
@@ -34,9 +33,7 @@ type Parser struct {
 // New :
 func New(src interface{}) (*Parser, error) {
 	v := reflect.ValueOf(src)
-	log.Println(v, v.Type())
 	codec := getCodec(v.Type())
-	log.Println(codec)
 	lexer := lexmachine.NewLexer()
 	dl := newDefaultTokenLexer()
 	dl.addActions(lexer)
@@ -44,8 +41,19 @@ func New(src interface{}) (*Parser, error) {
 	p := new(Parser)
 	p.lexer = lexer
 	p.FilterTag = "filter"
+	p.SortTag = "sort"
+	p.LimitTag = "limit"
 	p.codec = codec
 	return p, nil
+}
+
+// MustNew :
+func MustNew(src interface{}) *Parser {
+	p, err := New(src)
+	if err != nil {
+		panic(err)
+	}
+	return p
 }
 
 // ParseQuery :
@@ -69,6 +77,12 @@ func (p *Parser) ParseQueryBytes(query []byte) (*Params, error) {
 	// errs = append(errs, p.parseSort(values, params)...)
 	// errs = append(errs, p.parseLimit(values, params)...)
 	if err := p.parseFilter(values, params); err != nil {
+		return nil, err
+	}
+	if err := p.parseSort(values, params); err != nil {
+		return nil, err
+	}
+	if err := p.parseLimit(values, params); err != nil {
 		return nil, err
 	}
 

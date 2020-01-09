@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"reflect"
 	"strconv"
 	"strings"
@@ -30,7 +29,6 @@ func (p *Parser) parseFilter(values map[string]string, params *Params) error {
 		return err
 	}
 
-	params.Filters = make([]*Filter, 0)
 loop:
 	for {
 		tkn1, err := nextToken(scan)
@@ -102,9 +100,9 @@ loop:
 		}
 	}
 
-	for _, f := range params.Filters {
-		log.Println("Each :", f, reflect.TypeOf(f.Value), reflect.TypeOf(f))
-	}
+	// for _, f := range params.Filters {
+	// 	log.Println("Each :", f, reflect.TypeOf(f.Value), reflect.TypeOf(f))
+	// }
 	return nil
 }
 

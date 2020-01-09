@@ -8,10 +8,9 @@ import (
 
 // StructField :
 type StructField struct {
-	Name   string
-	Tag    *StructTag
-	Allows []string
-	Type   reflect.Type
+	Name string
+	Tag  *StructTag
+	Type reflect.Type
 }
 
 // StructTag :
@@ -70,6 +69,6 @@ func getCodec(t reflect.Type) *Struct {
 	for _, f := range fields {
 		codec.Names[f.Name] = f
 	}
-	log.Println(fields)
+	// log.Println(fields)
 	return codec
 }
