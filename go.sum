@@ -1,6 +1,16 @@
+github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
+github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
+github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
+github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
+github.com/stretchr/testify v1.4.0 h1:2E4SXV/wtOkTonXsotYi4li6zVWxYlZuYNCXe9XRJyk=
+github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81PSLYec5m4=
 github.com/timtadh/data-structures v0.5.2/go.mod h1:9R4XODhJ8JdWFEI8P/HJKqxuJctfBQw6fDibMQny2oU=
 github.com/timtadh/data-structures v0.5.3 h1:F2tEjoG9qWIyUjbvXVgJqEOGJPMIiYn7U5W5mE+i/vQ=
 github.com/timtadh/data-structures v0.5.3/go.mod h1:9R4XODhJ8JdWFEI8P/HJKqxuJctfBQw6fDibMQny2oU=
 github.com/timtadh/getopt v1.0.0/go.mod h1:L3EL6YN2G0eIAhYBo9b7SB9d/kEQmdnwthIlMJfj210=
 github.com/timtadh/lexmachine v0.2.3-0.20191122170559-2474ad5d8313 h1:bwwHP6SOlxj+5F6+eVoXSK7p0OJpE+0Zghx4BcdON8A=
 github.com/timtadh/lexmachine v0.2.3-0.20191122170559-2474ad5d8313/go.mod h1:An87z74QsP8eXNi0u+/7uJp24zHN0jSlvLZl/TXM1KE=
+gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
+gopkg.in/yaml.v2 v2.2.2 h1:ZCJp+EgiOT7lHqUV2J862kp8Qj64Jo6az82+3Td9dZw=
+gopkg.in/yaml.v2 v2.2.2/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=

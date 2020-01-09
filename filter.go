@@ -30,7 +30,7 @@ func (p *Parser) parseFilter(values map[string]string, params *Params) error {
 		return err
 	}
 
-	conds := make([]*Filter, 0)
+	params.Filters = make([]*Filter, 0)
 loop:
 	for {
 		tkn1, err := nextToken(scan)
@@ -50,30 +50,40 @@ loop:
 			return fmt.Errorf("invalid field to filter")
 		}
 
-		filters := allows[f.Type.Kind()]
-		if v, ok := f.Tag.Lookup("allow"); ok {
-			filters = strings.Split(v, "|")
+		name := tkn1.Value
+		if v, ok := f.Tag.Lookup("column"); ok {
+			name = v
 		}
 
-		log.Println("debug /...................")
-		log.Println(filters, f.Type, tkn1)
+		allows := getAllows(f.Type)
+		if v, ok := f.Tag.Lookup("allow"); ok {
+			allows = strings.Split(v, "|")
+		}
+
 		tkn2, err := nextToken(scan)
 		if err != nil {
 			return err
 		}
+
+		op := operators[tkn2.Value]
+		if Strings(allows).IndexOf(op.String()) < 0 {
+			return errors.New("operator not support for this field")
+		}
+
 		tkn3, err := nextToken(scan)
 		if err != nil {
 			return err
 		}
 
-		value, err := convertValue(f, strings.Trim(tkn3.Value, `"`))
+		v := reflect.New(f.Type).Elem()
+		value, err := convertValue(v, strings.Trim(tkn3.Value, `"`))
 		if err != nil {
 			return err
 		}
 
-		conds = append(conds, &Filter{
-			Name:     tkn1.Value,
-			Operator: operators[tkn2.Value],
+		params.Filters = append(params.Filters, &Filter{
+			Name:     name,
+			Operator: op,
 			Value:    value,
 		})
 
@@ -92,8 +102,8 @@ loop:
 		}
 	}
 
-	for _, c := range conds {
-		log.Println("Each :", *c, reflect.TypeOf(c.Value))
+	for _, f := range params.Filters {
+		log.Println("Each :", f, reflect.TypeOf(f.Value), reflect.TypeOf(f))
 	}
 	return nil
 }
@@ -109,18 +119,18 @@ func nextToken(scan *lexmachine.Scanner) (*Token, error) {
 	return it.(*Token), nil
 }
 
-func convertValue(sf *StructField, value string) (interface{}, error) {
-	v := reflect.New(sf.Type).Elem()
-
-	switch sf.Type.Kind() {
+func convertValue(v reflect.Value, value string) (interface{}, error) {
+	switch v.Kind() {
 	case reflect.String:
 		v.SetString(value)
+
 	case reflect.Bool:
 		x, err := strconv.ParseBool(value)
 		if err != nil {
 			return nil, err
 		}
 		v.SetBool(x)
+
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 		x, err := strconv.ParseInt(value, 10, 64)
 		if err != nil {
@@ -130,6 +140,7 @@ func convertValue(sf *StructField, value string) (interface{}, error) {
 			return nil, errors.New("int overflow")
 		}
 		v.SetInt(x)
+
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
 		x, err := strconv.ParseUint(value, 10, 64)
 		if err != nil {
@@ -139,6 +150,7 @@ func convertValue(sf *StructField, value string) (interface{}, error) {
 			return nil, errors.New("unsigned int overflow")
 		}
 		v.SetUint(x)
+
 	case reflect.Float32, reflect.Float64:
 		x, err := strconv.ParseFloat(value, 64)
 		if err != nil {
@@ -148,9 +160,18 @@ func convertValue(sf *StructField, value string) (interface{}, error) {
 			return nil, errors.New("float overflow")
 		}
 		v.SetFloat(x)
-	case reflect.Array:
-	case reflect.Slice:
+
+	// case reflect.Array:
+	// case reflect.Slice:
 	case reflect.Ptr:
+		if value == "null" {
+			zero := reflect.Zero(v.Type())
+			return zero.Interface(), nil
+		}
+		return convertValue(v.Elem(), value)
+
+	default:
+		return nil, fmt.Errorf("unsupported data type %v", v.Type())
 	}
 
 	return v.Interface(), nil

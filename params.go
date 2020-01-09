@@ -3,7 +3,7 @@ package rsql
 // Params :
 type Params struct {
 	Selects []interface{}
-	Filters []interface{}
+	Filters []*Filter
 	Sorts   []interface{}
 	Limit   uint
 }

@@ -22,7 +22,6 @@ type Parser struct {
 	FilterTag    string
 	SortTag      string
 	LimitTag     string
-	zero         reflect.Value
 	codec        *Struct
 	lexer        *lexmachine.Lexer
 	FormatColumn FormatFunc
@@ -69,7 +68,9 @@ func (p *Parser) ParseQueryBytes(query []byte) (*Params, error) {
 	// errs = append(errs, p.parseSelect(values, params)...)
 	// errs = append(errs, p.parseSort(values, params)...)
 	// errs = append(errs, p.parseLimit(values, params)...)
-	p.parseFilter(values, params)
+	if err := p.parseFilter(values, params); err != nil {
+		return nil, err
+	}
 
 	// if len(errs) > 0 {
 	// 	return nil, errs
