@@ -52,6 +52,7 @@ func (l *defaultTokenLexer) addActions(lexer *lexmachine.Lexer) {
 	lexer.Add([]byte(`\s`), l.token("whitespace"))
 	lexer.Add([]byte(`\(|\)`), l.token("grouping"))
 	lexer.Add([]byte(`\"(\\.|[^\"])*\"`), l.token("string"))
+	lexer.Add([]byte(`\'(\\.|[^\'])*\'`), l.token("string"))
 	lexer.Add([]byte(`(\,|or)`), l.token("or"))
 	lexer.Add([]byte(`(\;|and)`), l.token("and"))
 	lexer.Add([]byte(`(\-)?([0-9]*\.[0-9]+|[0-9]+)`), l.token("numeric"))

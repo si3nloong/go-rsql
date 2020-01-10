@@ -86,7 +86,8 @@ loop:
 		}
 
 		v := reflect.New(f.Type).Elem()
-		value, err := convertValue(v, strings.Trim(tkn3.Value, `"`))
+		tkn3.Value = strings.Trim(tkn3.Value, `"'`)
+		value, err := convertValue(v, tkn3.Value)
 		if err != nil {
 			return err
 		}
