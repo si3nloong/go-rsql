@@ -27,6 +27,10 @@ func TestRSQL(t *testing.T) {
 		require.True(t, len(param.Filters) > 0)
 		require.True(t, len(param.Sorts) > 0)
 		require.Equal(t, uint(100), param.Limit)
+
+		param, err = p.ParseQuery(`filter=(int>10;status=eq="111";no=gt=1991;text==null)&sort=status,-no&limit=100`)
+		require.NoError(t, err)
+		require.NotNil(t, param)
 	}
 
 	{

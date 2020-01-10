@@ -46,6 +46,11 @@ loop:
 			return err
 		}
 
+		switch tkn1.Value {
+		case "(", ")":
+			continue
+		}
+
 		f, ok := p.codec.Names[tkn1.Value]
 		if !ok {
 			return fmt.Errorf("invalid field to filter")
@@ -102,6 +107,7 @@ loop:
 
 		switch tkn.Value {
 		case ";", ",":
+		case "(", ")":
 		default:
 			return errors.New("unexpected char")
 		}
