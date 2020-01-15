@@ -1,6 +1,8 @@
 package rsql
 
 import (
+	"bytes"
+
 	"github.com/timtadh/lexmachine"
 	"github.com/timtadh/lexmachine/machines"
 )
@@ -49,6 +51,15 @@ func newDefaultTokenLexer() *defaultTokenLexer {
 }
 
 func (l *defaultTokenLexer) addActions(lexer *lexmachine.Lexer) {
+	b := new(bytes.Buffer)
+	b.WriteByte('(')
+	for k := range operators {
+		b.WriteString(k)
+		b.WriteByte('|')
+	}
+	b.Truncate(b.Len() - 1)
+	b.WriteByte(')')
+
 	lexer.Add([]byte(`\s`), l.token("whitespace"))
 	lexer.Add([]byte(`\(|\)`), l.token("grouping"))
 	lexer.Add([]byte(`\"(\\.|[^\"])*\"`), l.token("string"))
@@ -57,7 +68,7 @@ func (l *defaultTokenLexer) addActions(lexer *lexmachine.Lexer) {
 	lexer.Add([]byte(`(\;|and)`), l.token("and"))
 	lexer.Add([]byte(`(\-)?([0-9]*\.[0-9]+|[0-9]+)`), l.token("numeric"))
 	lexer.Add([]byte(`[a-zA-Z0-9\_\.\%]+`), l.token("text"))
-	lexer.Add([]byte(`(\=\=|\!\=|\>|\>\=|\<|\<\=|\=eq\=|\=ne\=|\=gt\=|\=gte\=|\=lt\=|\=lte\=|\=in\=|\=nin\=)`), l.token("operator"))
+	lexer.Add(b.Bytes(), l.token("operator"))
 	l.lexer = lexer
 }
 

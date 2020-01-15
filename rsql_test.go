@@ -40,7 +40,7 @@ func TestRSQL(t *testing.T) {
 		require.NotNil(t, param)
 		log.Println("Filters :", param.Filters)
 
-		param, err = p.ParseQuery(`filter=(submittedAt>='2019-12-22T16:00:00Z';submittedAt<='2019-12-31T15:59:59Z';status=='APPROVED')&limit=100`)
+		param, err = p.ParseQuery(`filter=(submittedAt>='2019-12-22T16:00:00Z';submittedAt<='2019-12-31T15:59:59Z';status=="APPROVED")&limit=100`)
 		require.NoError(t, err)
 		require.NotNil(t, param)
 		log.Println("Filters :", param.Filters)
