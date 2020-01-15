@@ -2,6 +2,7 @@ package rsql
 
 import (
 	"bytes"
+	"strings"
 
 	"github.com/timtadh/lexmachine"
 	"github.com/timtadh/lexmachine/machines"
@@ -54,7 +55,7 @@ func (l *defaultTokenLexer) addActions(lexer *lexmachine.Lexer) {
 	b := new(bytes.Buffer)
 	b.WriteByte('(')
 	for k := range operators {
-		b.WriteString(k)
+		b.WriteString(escapeStr(k))
 		b.WriteByte('|')
 	}
 	b.Truncate(b.Len() - 1)
@@ -85,4 +86,20 @@ func (l *defaultTokenLexer) token(name string) lexmachine.Action {
 			EndColumn:   m.EndColumn,
 		}, nil
 	}
+}
+
+func escapeStr(str string) string {
+	length := len(str)
+	blr := new(strings.Builder)
+	for i := 0; i < length; i++ {
+		if (str[i] >= 'a' && str[i] <= 'z') ||
+			(str[i] >= 'A' && str[i] <= 'Z') ||
+			(str[i] >= '0' && str[i] <= '9') {
+			blr.WriteByte(str[i])
+		} else {
+			blr.WriteByte('\\')
+			blr.WriteByte(str[i])
+		}
+	}
+	return blr.String()
 }
