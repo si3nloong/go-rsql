@@ -57,4 +57,17 @@ func TestRSQL(t *testing.T) {
 		require.NoError(t, err)
 		require.NotNil(t, param)
 	}
+
+	{
+		var i struct {
+			Title            string    `rsql:"title,filter"`
+			Audience         string    `rsql:"audience,filter"`
+			Status           string    `rsql:"status,filter,sort,allow=eq|gt|gte"`
+			ScheduleDateTime time.Time `rsql:"scheduleDateTime,filter,sort"`
+		}
+		p := MustNew(i)
+		param, err := p.ParseQuery(`filter=(audience=="CUSTOMIZED";status=="PENDING";scheduleDateTime>='2020-01-14T16:00:00Z';scheduleDateTime<='2020-01-20T15:59:59Z';title=like="testing%25")`)
+		require.NoError(t, err)
+		log.Println(param.Filters)
+	}
 }

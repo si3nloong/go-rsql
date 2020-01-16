@@ -11,10 +11,10 @@ const (
 	LesserOrEqual
 	GreaterThan
 	GreaterOrEqual
-	Like
-	NotLike
 	In
 	NotIn
+	Like
+	NotLike
 )
 
 func (e Expr) String() string {
@@ -35,6 +35,10 @@ func (e Expr) String() string {
 		return "in"
 	case NotIn:
 		return "notIn"
+	case Like:
+		return "like"
+	case NotLike:
+		return "notLike"
 	default:
 		return "unknown"
 	}
