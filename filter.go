@@ -25,7 +25,7 @@ type Filter struct {
 	Value    interface{}
 }
 
-func (p *Parser) parseFilter(values map[string]string, params *Params) error {
+func (p *RSQL) parseFilter(values map[string]string, params *Params) error {
 	val, ok := values[p.FilterTag]
 	if !ok || len(val) < 1 {
 		return nil
@@ -132,6 +132,8 @@ func nextToken(scan *lexmachine.Scanner) (*Token, error) {
 }
 
 func convertValue(v reflect.Value, value string) (interface{}, error) {
+	value = strings.TrimSpace(value)
+
 	switch v.Type() {
 	case typeOfTime:
 		t, err := time.Parse(time.RFC3339, value)
@@ -189,8 +191,6 @@ func convertValue(v reflect.Value, value string) (interface{}, error) {
 			}
 			v.SetFloat(x)
 
-		// case reflect.Array:
-		// case reflect.Slice:
 		case reflect.Ptr:
 			if value == "null" {
 				zero := reflect.Zero(v.Type())

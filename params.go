@@ -6,5 +6,6 @@ type Params struct {
 	Filters []*Filter
 	Sorts   []*Sort
 	Limit   uint
+	Offset  uint
 	Cursor  string
 }

@@ -19,7 +19,7 @@ type Sort struct {
 	Direction Direction
 }
 
-func (p *Parser) parseSort(values map[string]string, params *Params) error {
+func (p *RSQL) parseSort(values map[string]string, params *Params) error {
 	val, ok := values[p.SortTag]
 	delete(values, p.SortTag)
 	if !ok || len(val) < 1 {

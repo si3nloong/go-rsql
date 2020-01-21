@@ -69,6 +69,5 @@ func getCodec(t reflect.Type) *Struct {
 	for _, f := range fields {
 		codec.Names[f.Name] = f
 	}
-	// log.Println(fields)
 	return codec
 }

@@ -7,48 +7,53 @@ import (
 )
 
 const (
-	defaultLimit    = uint(20)
-	defaultMaxLimit = uint(100)
-	maxUint         = ^uint(0)
+	defaultLimit = uint(50)
+	// defaultMaxLimit = uint(100)
+	maxUint = ^uint(0)
 )
 
 // FormatFunc :
 type FormatFunc func(string) string
 
-// Parser :
-type Parser struct {
+type Parser interface {
+	ParseQuery(string) (*Params, error)
+}
+
+// RSQL :
+type RSQL struct {
 	SelectTag    string
 	FilterTag    string
 	SortTag      string
 	LimitTag     string
+	PageTag      string
 	codec        *Struct
 	lexer        *lexmachine.Lexer
 	FormatColumn FormatFunc
 	DefaultLimit uint
 	MaxLimit     uint
-	// registry     *codec.Registry
-	// mapper       *reflext.Struct
 }
 
 // New :
-func New(src interface{}) (*Parser, error) {
+func New(src interface{}) (*RSQL, error) {
 	v := reflect.ValueOf(src)
 	codec := getCodec(v.Type())
 	lexer := lexmachine.NewLexer()
 	dl := newDefaultTokenLexer()
 	dl.addActions(lexer)
 
-	p := new(Parser)
+	p := new(RSQL)
 	p.lexer = lexer
 	p.FilterTag = "filter"
 	p.SortTag = "sort"
 	p.LimitTag = "limit"
+	p.PageTag = "page"
+	p.DefaultLimit = defaultLimit
 	p.codec = codec
 	return p, nil
 }
 
 // MustNew :
-func MustNew(src interface{}) *Parser {
+func MustNew(src interface{}) *RSQL {
 	p, err := New(src)
 	if err != nil {
 		panic(err)
@@ -57,12 +62,12 @@ func MustNew(src interface{}) *Parser {
 }
 
 // ParseQuery :
-func (p *Parser) ParseQuery(query string) (*Params, error) {
+func (p *RSQL) ParseQuery(query string) (*Params, error) {
 	return p.ParseQueryBytes([]byte(query))
 }
 
 // ParseQueryBytes :
-func (p *Parser) ParseQueryBytes(query []byte) (*Params, error) {
+func (p *RSQL) ParseQueryBytes(query []byte) (*Params, error) {
 	values := make(map[string]string)
 	if err := parseRawQuery(values, string(query)); err != nil {
 		return nil, err
@@ -73,9 +78,6 @@ func (p *Parser) ParseQueryBytes(query []byte) (*Params, error) {
 		// errs   = make(Errors, 0)
 	)
 
-	// errs = append(errs, p.parseSelect(values, params)...)
-	// errs = append(errs, p.parseSort(values, params)...)
-	// errs = append(errs, p.parseLimit(values, params)...)
 	if err := p.parseFilter(values, params); err != nil {
 		return nil, err
 	}
@@ -85,9 +87,9 @@ func (p *Parser) ParseQueryBytes(query []byte) (*Params, error) {
 	if err := p.parseLimit(values, params); err != nil {
 		return nil, err
 	}
+	if err := p.parseOffset(values, params); err != nil {
+		return nil, err
+	}
 
-	// if len(errs) > 0 {
-	// 	return nil, errs
-	// }
 	return params, nil
 }
