@@ -38,6 +38,8 @@ func (p *RSQL) parseOffset(values map[string]string, params *Params) error {
 	if u64 > uint64(maxUint) {
 		return fmt.Errorf("overflow unsigned integer, %d", u64)
 	}
-	params.Offset = uint(u64) * params.Limit
+	if u64 > 0 {
+		params.Offset = uint(u64-1) * (params.Limit)
+	}
 	return nil
 }

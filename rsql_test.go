@@ -81,7 +81,7 @@ func TestRSQL(t *testing.T) {
 		query := `filter=&sort=name,-status&limit=10&page=2`
 		param, err := p.ParseQuery(query)
 		require.NoError(t, err)
-		require.Equal(t, uint(20), param.Offset)
+		require.Equal(t, uint(10), param.Offset)
 
 		/*
 			actions.Find().

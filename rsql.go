@@ -15,10 +15,6 @@ const (
 // FormatFunc :
 type FormatFunc func(string) string
 
-type Parser interface {
-	ParseQuery(string) (*Params, error)
-}
-
 // RSQL :
 type RSQL struct {
 	SelectTag    string
