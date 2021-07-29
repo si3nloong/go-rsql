@@ -1,6 +1,8 @@
-## Installation
+# Go RSQL
 
-```bash
+## 🔨 Installation
+
+```console
 go get github.com/si3nloong/go-rsql
 ```
 
@@ -24,5 +26,10 @@ func main() {
     log.Println(params.Filters)
     log.Println(params.Sorts)
 }
-
 ```
+
+## 📄 License
+
+[MIT](https://github.com/si3nloong/go-rsql/blob/master/LICENSE)
+
+Copyright (c) 2020-present, SianLoong Lee
