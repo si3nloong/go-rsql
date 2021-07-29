@@ -53,11 +53,11 @@ loop:
 
 		f, ok := p.codec.Names[tkn1.Value]
 		if !ok {
-			return fmt.Errorf("invalid field to filter")
+			return fmt.Errorf("rsql: invalid field %q to filter", tkn1.Value)
 		}
 
 		if _, ok := f.Tag.Lookup("filter"); !ok {
-			return fmt.Errorf("invalid field to filter")
+			return fmt.Errorf("rsql: field %q is not allow to filter", tkn1.Value)
 		}
 
 		name := tkn1.Value
@@ -77,7 +77,7 @@ loop:
 
 		op := operators[tkn2.Value]
 		if Strings(allows).IndexOf(op.String()) < 0 {
-			return errors.New("operator not support for this field")
+			return fmt.Errorf("rsql: operator %s is not allow for field %q", op, tkn1.Value)
 		}
 
 		tkn3, err := nextToken(scan)
@@ -92,7 +92,7 @@ loop:
 			return err
 		}
 
-		params.Filters = append(params.Filters, &Filter{
+		params.Filters = append(params.Filters, Filter{
 			Name:     name,
 			Operator: op,
 			Value:    value,

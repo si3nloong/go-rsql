@@ -18,7 +18,7 @@ func (p *RSQL) parseLimit(values map[string]string, params *Params) error {
 		return err
 	}
 	if u64 > uint64(maxUint) {
-		return fmt.Errorf("overflow unsigned integer, %d", u64)
+		return fmt.Errorf("rsql: overflow unsigned integer, %d", u64)
 	}
 	params.Limit = uint(u64)
 	return nil
@@ -36,7 +36,7 @@ func (p *RSQL) parseOffset(values map[string]string, params *Params) error {
 		return err
 	}
 	if u64 > uint64(maxUint) {
-		return fmt.Errorf("overflow unsigned integer, %d", u64)
+		return fmt.Errorf("rsql: overflow unsigned integer, %d", u64)
 	}
 	if u64 > 0 {
 		params.Offset = uint(u64-1) * (params.Limit)

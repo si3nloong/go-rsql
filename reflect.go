@@ -1,7 +1,6 @@
 package rsql
 
 import (
-	"log"
 	"reflect"
 	"strings"
 )
@@ -25,6 +24,7 @@ type Struct struct {
 	Names  map[string]*StructField
 }
 
+// NewTag :
 func NewTag(name string, tag reflect.StructTag) *StructTag {
 	paths := strings.Split(tag.Get(name), ",")
 	t := new(StructTag)
@@ -50,7 +50,6 @@ func getCodec(t reflect.Type) *Struct {
 	codec := new(Struct)
 	for i := 0; i < t.NumField(); i++ {
 		fv := t.Field(i)
-		log.Println(fv)
 
 		tag := NewTag("rsql", fv.Tag)
 		f := new(StructField)

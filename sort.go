@@ -2,6 +2,7 @@ package rsql
 
 import (
 	"errors"
+	"fmt"
 	"net/url"
 	"strings"
 )
@@ -30,7 +31,7 @@ func (p *RSQL) parseSort(values map[string]string, params *Params) error {
 	for _, v := range paths {
 		v = strings.TrimSpace(v)
 		if len(v) == 0 {
-			return errors.New("invalid sort")
+			return errors.New("rsql: invalid sort")
 		}
 
 		v, err := url.QueryUnescape(v)
@@ -47,11 +48,11 @@ func (p *RSQL) parseSort(values map[string]string, params *Params) error {
 
 		f, ok := p.codec.Names[v]
 		if !ok {
-			return errors.New("invalid field to sort")
+			return fmt.Errorf("rsql: invalid field %q to sort", v)
 		}
 
 		if _, ok := f.Tag.Lookup("sort"); !ok {
-			return errors.New("invalid field to sort")
+			return fmt.Errorf("rsql: field %q is not allow to sort", v)
 		}
 
 		name := f.Name
@@ -59,7 +60,7 @@ func (p *RSQL) parseSort(values map[string]string, params *Params) error {
 			name = v
 		}
 
-		params.Sorts = append(params.Sorts, &Sort{
+		params.Sorts = append(params.Sorts, Sort{
 			Field:     name,
 			Direction: dir,
 		})
